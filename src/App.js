@@ -1,23 +1,40 @@
-import logo from './logo.svg';
 import './App.css';
+import { useState,  } from 'react';
+import { createTheme, ThemeProvider } from '@mui/material';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import Dashboard from './Components/Dashboard';
+import DailyVodIngestionTable from './Components/DailyVodIngestionTable';
+import Sidebar from './Components/Sidebar';
+import ProjectDetails from './Components/ProjectDetails';
+
+const theme = createTheme();
 
 function App() {
+
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
+  const isLoginPage = location.pathname === '/';
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ThemeProvider theme={theme}>
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: "#f5f5f5" }}>
+          {/* <Header toggleSidebar={toggleSidebar} /> */}
+          <div style={{ flex: 1, display: 'flex', overflowY: 'auto' }}>
+            <Sidebar />
+            <div style={{ flexGrow: 1 }}>
+              <Routes>
+                {/* <Route path="/" element={<Login />} /> */}
+                <Route path="/dashboard" element={<Dashboard />}/>
+                <Route index path="/daily-vod-ingestion" element={<DailyVodIngestionTable />}/>
+                <Route index path="/project-details/:name" element={<ProjectDetails />}/>
+              </Routes>
+            </div>
+          </div>
+
+          {/* <Footer /> */}
+        </div>
+      </ThemeProvider>
     </div>
   );
 }
