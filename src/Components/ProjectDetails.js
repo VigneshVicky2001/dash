@@ -6,10 +6,11 @@ import {
 } from "@mui/material";
 import { LocalizationProvider, MobileDateTimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import CustomPagination from "./Common/CustomPagination";
 import dayjs from "dayjs";
 
 const ProjectDetails = () => {
-  const { name } = useParams(); // Get project name from URL
+  const { name } = useParams();
   const [status, setStatus] = useState("all");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -25,25 +26,38 @@ const ProjectDetails = () => {
     { id: 6, name: "PQR", lastModifiedDate: "2024-02-15T10:00:00", createdDate: "2024-02-15T20:00:00", draftReason: "lorem ipsum" },
   ];
 
-  // Handle pagination change
   const handleChangePage = (event, newPage) => setPage(newPage);
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // Reset to first page
+    setPage(0);
   };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Box sx={{ padding: 3 }}>
-        {/* Filters & Project Name */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2, marginBottom: 2 }}>
-          <Typography variant="h6" sx={{ whiteSpace: "nowrap", fontWeight: "bold" }}>
+      <Box
+        sx={{
+          padding: 3,
+          backgroundColor: "#212121",
+          minHeight: "calc(100vh - 90px)",
+          paddingBottom: "30px",
+        }}
+      >
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2, marginBottom: 2, flexWrap: "wrap" }}>
+          <Typography variant="h6" sx={{ whiteSpace: "nowrap", fontWeight: "bold", color: "#fff" }}>
             Project: {name}
           </Typography>
 
           <FormControl sx={{ minWidth: 120 }} size="small">
-            <InputLabel>Status</InputLabel>
-            <Select value={status} onChange={(e) => setStatus(e.target.value)}>
+            <InputLabel sx={{ color: "#fff" }}>Status</InputLabel>
+            <Select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              sx={{
+                backgroundColor: "#333",
+                color: "#fff",
+                ".MuiSvgIcon-root": { color: "#fff" },
+              }}
+            >
               <MenuItem value="all">All</MenuItem>
               <MenuItem value="published">Published</MenuItem>
               <MenuItem value="draft">Draft</MenuItem>
@@ -54,45 +68,113 @@ const ProjectDetails = () => {
             label="Start Date & Time"
             value={startDate}
             onChange={(date) => setStartDate(date)}
-            slotProps={{ textField: { size: "small", variant: "outlined" } }}
+            slotProps={{
+              textField: {
+                size: "small",
+                variant: "outlined",
+                sx: {
+                  backgroundColor: "#333",
+                  input: { color: "#fff" },
+                  label: { color: "#fff" },
+                },
+              },
+            }}
           />
 
           <MobileDateTimePicker
             label="End Date & Time"
             value={endDate}
             onChange={(date) => setEndDate(date)}
-            slotProps={{ textField: { size: "small", variant: "outlined" } }}
+            slotProps={{
+              textField: {
+                size: "small",
+                variant: "outlined",
+                sx: {
+                  backgroundColor: "#333",
+                  input: { color: "#fff" },
+                  label: { color: "#fff" },
+                },
+              },
+            }}
           />
         </Box>
 
-        {/* Table */}
-        <TableContainer component={Paper}>
-          <Table>
+        <TableContainer
+          component={Paper}
+          sx={{
+            backgroundColor: "#333",
+            boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.5)",
+          }}
+        >
+          <Table
+            sx={{
+              borderCollapse: "separate",
+              borderSpacing: "0",
+            }}
+          >
             <TableHead>
-              <TableRow sx={{ backgroundColor: "#eeeeee" }}>
-                <TableCell><strong>Title</strong></TableCell>
-                <TableCell><strong>ID</strong></TableCell>
-                <TableCell><strong>Created Date</strong></TableCell>
-                <TableCell><strong>Last Modified Date</strong></TableCell>
-                <TableCell><strong>Draft Reason</strong></TableCell>
+              <TableRow sx={{ backgroundColor: "#424242" }}>
+                <TableCell sx={{ color: "#e6e7e7", borderBottom: "none" }}><strong>Title</strong></TableCell>
+                <TableCell sx={{ color: "#e6e7e7", borderBottom: "none" }}><strong>ID</strong></TableCell>
+                <TableCell sx={{ color: "#e6e7e7", borderBottom: "none" }}><strong>Created Date</strong></TableCell>
+                <TableCell sx={{ color: "#e6e7e7", borderBottom: "none" }}><strong>Last Modified Date</strong></TableCell>
+                <TableCell sx={{ color: "#e6e7e7", borderBottom: "none" }}><strong>Draft Reason</strong></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item) => (
-                <TableRow key={item.id} hover>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell>{item.id}</TableCell>
-                  <TableCell>{dayjs(item.createdDate).format("YYYY-MM-DD HH:mm")}</TableCell>
-                  <TableCell>{dayjs(item.lastModifiedDate).format("YYYY-MM-DD HH:mm")}</TableCell>
-                  <TableCell>{item.draftReason}</TableCell>
+              {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
+                <TableRow
+                  key={item.id}
+                  hover
+                  sx={{
+                    cursor: "pointer",
+                    backgroundColor: index % 2 === 0 ? "#2c2c2c" : "#383838",
+                    transition: "background-color 0.3s",
+                    // borderBottom: "0px",
+                    "&:last-child td": { borderBottom: 0 },
+                  }}
+                >
+                  <TableCell sx={{ color: "#e6e7e7", border: "none" }}>{item.name}</TableCell>
+                  <TableCell sx={{ color: "#e6e7e7", border: "none" }}>{item.id}</TableCell>
+                  <TableCell sx={{ color: "#e6e7e7", border: "none" }}>
+                    {dayjs(item.createdDate).format("YYYY-MM-DD HH:mm")}
+                  </TableCell>
+                  <TableCell sx={{ color: "#e6e7e7", border: "none" }}>
+                    {dayjs(item.lastModifiedDate).format("YYYY-MM-DD HH:mm")}
+                  </TableCell>
+                  <TableCell sx={{ color: "#e6e7e7", border: "none" }}>{item.draftReason}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
 
-        {/* Pagination */}
         <TablePagination
+          sx={{
+            color: "#fff",
+            backgroundColor: "#333",
+            ".MuiTablePagination-toolbar": {
+              padding: "0 8px",
+              minHeight: "36px",
+            },
+            ".MuiTablePagination-selectLabel, .MuiTablePagination-input, .MuiTablePagination-displayedRows": {
+              color: "#fff",
+            },
+            ".MuiTablePagination-select, .MuiTablePagination-actions": {
+              margin: 0,
+            },
+            ".MuiSvgIcon-root": {
+              color: "#fff",
+            },
+            ".MuiTablePagination-select": {
+              backgroundColor: "#424242",
+              borderRadius: "4px",
+              // padding: "2px 8px",
+            },
+            ".MuiTablePagination-actions button": {
+              padding: "4px",
+            },
+          }}
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
           count={data.length}

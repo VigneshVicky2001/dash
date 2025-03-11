@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box } from "@mui/material";
 import { CheckCircle, Cancel } from "@mui/icons-material";
 
 const Dashboard = () => {
@@ -22,37 +22,61 @@ const Dashboard = () => {
     ];
 
     return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "50px", backgroundColor: "#f5f5f5" }}>
-      <TableContainer component={Paper} style={{ maxWidth: 800, width: "100%", padding: 16 }}>
-        <Table>
+    <Box
+      sx={{
+        display: "flex",
+        padding: 3,
+        // justifyContent: "center",
+        // alignItems: "center",
+        backgroundColor: "#212121",
+        minHeight: "calc(100vh - 90px)",
+        px: 3,
+      }}
+    >      
+      <TableContainer
+        component={Paper}
+        style={{
+          // maxWidth: 800,
+          width: "100%",
+          // padding: 16,
+          backgroundColor: "#333",
+          boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.5)",
+        }}
+      >
+        <Table
+          sx={{
+            borderCollapse: "separate",
+            borderSpacing: "0",
+          }}
+        >
           <TableHead>
-            <TableRow style={{ backgroundColor: "#eeeeee" }}>
-              <TableCell><strong>Project Name</strong></TableCell>
-              <TableCell align="center"><strong>Published</strong></TableCell>
-              <TableCell align="center"><strong>Draft</strong></TableCell>
+            <TableRow style={{ backgroundColor: "#424242" }}>
+              <TableCell style={{ color: "#e6e7e7", borderBottom: "none" }}><strong>Project Name</strong></TableCell>
+              <TableCell align="center" style={{ color: "#e6e7e7", borderBottom: "none" }}><strong>Published</strong></TableCell>
+              <TableCell align="center" style={{ color: "#e6e7e7", borderBottom: "none" }}><strong>Draft</strong></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {projects.map((project, index) => (
-              <TableRow 
-                key={index} 
+              <TableRow
+                key={index}
                 hover
-                style={{ cursor: "pointer" }}
+                sx={{
+                  cursor: "pointer",
+                  backgroundColor: index % 2 === 0 ? "#2c2c2c" : "#383838",
+                  transition: "background-color 0.3s",
+                }}
                 onClick={() => navigate(`/project-details/${project.name}`)}
               >
-                <TableCell>{project.name}</TableCell>
-                <TableCell align="center" style={{ color: "green" }}>
-                  {project.published}
-                </TableCell>
-                <TableCell align="center" style={{ color: "red" }}>
-                  {project.draft}
-                </TableCell>
+                <TableCell style={{ color: "#e6e7e7", borderBottom: "none" }}>{project.name}</TableCell>
+                <TableCell align="center" style={{ color: "#81c784", borderBottom: "none" }}>{project.published}</TableCell>
+                <TableCell align="center" style={{ color: "#f52d31", borderBottom: "none" }}>{project.draft}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-    </div>
+    </Box>
   );
 };
 

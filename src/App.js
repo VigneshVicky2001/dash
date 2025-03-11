@@ -6,8 +6,16 @@ import Dashboard from './Components/Dashboard';
 import DailyVodIngestionTable from './Components/DailyVodIngestionTable';
 import Sidebar from './Components/Sidebar';
 import ProjectDetails from './Components/ProjectDetails';
+import Login from './Components/Login';
+import Header from './Components/Header';
+import Footer from './Components/Footer';
+import "@fontsource/mulish";
 
-const theme = createTheme();
+const theme = createTheme({
+  typography: {
+    fontFamily: "Mulish, sans-serif",
+  },
+});
 
 function App() {
 
@@ -15,27 +23,29 @@ function App() {
   const location = useLocation();
   const isLoginPage = location.pathname === '/';
 
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
   return (
-    <div className="App">
       <ThemeProvider theme={theme}>
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: "#f5f5f5" }}>
-          {/* <Header toggleSidebar={toggleSidebar} /> */}
+        <Header toggleSidebar={toggleSidebar} showLogout={!isLoginPage} />
           <div style={{ flex: 1, display: 'flex', overflowY: 'auto' }}>
-            <Sidebar />
-            <div style={{ flexGrow: 1 }}>
+          {!isLoginPage && <Sidebar open={sidebarOpen} toggleSidebar={toggleSidebar} isMinimized={sidebarOpen} />}
+            <div style={{ flexGrow: 1, marginTop: '60px' }}>
               <Routes>
-                {/* <Route path="/" element={<Login />} /> */}
+                <Route path="/" element={<Login />} />
                 <Route path="/dashboard" element={<Dashboard />}/>
                 <Route index path="/daily-vod-ingestion" element={<DailyVodIngestionTable />}/>
-                <Route index path="/project-details/:name" element={<ProjectDetails />}/>
-              </Routes>
+                <Route path="/project-details/:name" element={<ProjectDetails />}/>
+              </Routes>-
             </div>
           </div>
 
-          {/* <Footer /> */}
+          <Footer />
         </div>
       </ThemeProvider>
-    </div>
   );
 }
 
