@@ -28,7 +28,7 @@ const Dashboard = () => {
         padding: 3,
         // justifyContent: "center",
         // alignItems: "center",
-        backgroundColor: "#212121",
+        // backgroundColor: "#212121",
         minHeight: "calc(100vh - 90px)",
         px: 3,
       }}

@@ -19,7 +19,7 @@ const Header = ({ toggleSidebar, showLogout }) => {
   };
 
   return (
-    <GlassAppBar position="fixed" className="header" sx={{ zIndex: 1201 }}>
+    <GlassAppBar position="fixed" className="header" sx={{ zIndex: 1201, boxShadow: "none" }}>
       <Toolbar sx={{ height: '100%', padding: '0 20px' }}>
       {/* <IconButton
           edge="start"

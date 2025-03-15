@@ -37,7 +37,7 @@ const ProjectDetails = () => {
       <Box
         sx={{
           padding: 3,
-          backgroundColor: "#212121",
+          // backgroundColor: "#212121",
           minHeight: "calc(100vh - 90px)",
           paddingBottom: "30px",
         }}

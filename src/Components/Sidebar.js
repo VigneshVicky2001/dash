@@ -16,7 +16,7 @@ const Sidebar = ({ open, isMinimized }) => {
   const menuItems = [
     { label: 'Dashboard', path: '/dashboard', icon: <DashboardIcon /> },
     { label: 'Daily VOD ingestion', path: '/daily-vod-ingestion', icon: <CategoryIcon /> },
-    { label: 'Total VOD Assets', path: '/1234', icon: <CategoryIcon /> },
+    { label: 'Total VOD Assets', path: '/total-vod-asset', icon: <CategoryIcon /> },
   ];
 
   return (

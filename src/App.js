@@ -9,6 +9,7 @@ import ProjectDetails from './Components/ProjectDetails';
 import Login from './Components/Login';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
+import TotalVodAssets from './Components/TotalVodAssets';
 import "@fontsource/mulish";
 
 const theme = createTheme({
@@ -29,7 +30,7 @@ function App() {
 
   return (
       <ThemeProvider theme={theme}>
-        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: "#f5f5f5" }}>
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: "#212121" }}>
         <Header toggleSidebar={toggleSidebar} showLogout={!isLoginPage} />
           <div style={{ flex: 1, display: 'flex', overflowY: 'auto' }}>
           {!isLoginPage && <Sidebar open={sidebarOpen} toggleSidebar={toggleSidebar} isMinimized={sidebarOpen} />}
@@ -39,7 +40,8 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />}/>
                 <Route index path="/daily-vod-ingestion" element={<DailyVodIngestionTable />}/>
                 <Route path="/project-details/:name" element={<ProjectDetails />}/>
-              </Routes>-
+                <Route path="/total-vod-asset" element={<TotalVodAssets />}/>
+              </Routes>
             </div>
           </div>
 
