@@ -1,8 +1,49 @@
 import React, { useState } from "react";
 import { Typography, Box, List, ListItem, ListItemText } from "@mui/material";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Sector } from "recharts";
+import { motion } from "framer-motion";
 
 const TotalVodAssets = () => {
+  const [activeIndex, setActiveIndex] = useState(null);
+  const renderActiveShape = (props) => {
+    if (activeIndex === null) return null;
+    const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props;
+
+    return (
+      <motion.g
+      initial={{ scale: 1 }}
+      animate={{ scale: activeIndex !== null ? 1.1 : 1 }} // ✅ Uses motion animation
+      transition={{ duration: 0.2, ease: "easeInOut" }}
+    >
+      <motion.path
+        d={`
+          M ${cx + outerRadius * Math.cos((startAngle * Math.PI) / 180)}
+            ${cy + outerRadius * Math.sin((startAngle * Math.PI) / 180)}
+          A ${outerRadius} ${outerRadius} 0 ${endAngle - startAngle > 180 ? 1 : 0} 1
+            ${cx + outerRadius * Math.cos((endAngle * Math.PI) / 180)}
+            ${cy + outerRadius * Math.sin((endAngle * Math.PI) / 180)}
+          L ${cx + innerRadius * Math.cos((endAngle * Math.PI) / 180)}
+            ${cy + innerRadius * Math.sin((endAngle * Math.PI) / 180)}
+          A ${innerRadius} ${innerRadius} 0 ${endAngle - startAngle > 180 ? 1 : 0} 0
+            ${cx + innerRadius * Math.cos((startAngle * Math.PI) / 180)}
+            ${cy + innerRadius * Math.sin((startAngle * Math.PI) / 180)}
+          Z
+        `}
+        fill={fill}
+        stroke="#fff"
+        strokeWidth={2}
+        animate={{
+          scale: activeIndex !== null ? 1.1 : 1, // ✅ Expands sector size
+          filter: activeIndex !== null
+            ? "drop-shadow(0px 0px 12px rgba(255, 255, 255, 0.5))"
+            : "none",
+        }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+      />
+    </motion.g>
+    );
+  };
+
   const projectData = [
     { name: "AHA", totalContents: 16, totalDuration: 120 },
     { name: "AMD", totalContents: 25, totalDuration: 200 },
@@ -22,31 +63,6 @@ const TotalVodAssets = () => {
     "#4DB6AC", "#FF7043", "#9575CD", "#64B5F6", "#FFCA28",
     "#FF8A65", "#4CAF50", "#E57373",
   ];
-
-  const [activeIndex, setActiveIndex] = useState(null);
-
-  const renderActiveShape = (props) => {
-    const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, midAngle } = props;
-    const RADIAN = Math.PI / 180;
-
-    return (
-      <Sector
-        cx={cx}
-        cy={cy}
-        innerRadius={innerRadius}
-        outerRadius={outerRadius + 10}
-        startAngle={startAngle}
-        endAngle={endAngle}
-        fill={fill}
-        stroke="#fff"
-        strokeWidth={2}
-        style={{
-          transition: "all 0.3s ease-out",
-          filter: "drop-shadow(0px 0px 10px rgba(255, 255, 255, 0.3))",
-        }}
-      />
-    );
-  };
 
   return (
     <Box
@@ -72,6 +88,7 @@ const TotalVodAssets = () => {
                 nameKey="name"
                 cx="50%"
                 cy="50%"
+                innerRadius={120}
                 outerRadius={240}
                 fill="#82ca9d"
                 label
@@ -79,9 +96,11 @@ const TotalVodAssets = () => {
                 activeShape={renderActiveShape}
                 onMouseEnter={(_, index) => setActiveIndex(index)}
                 onMouseLeave={() => setActiveIndex(null)}
+                onClick={() => setActiveIndex(null)}
+                isAnimationActive={false}
               >
                 {projectData.map((_, index) => (
-                  <Cell key={`cell-content-${index}`} fill={COLORS[index % COLORS.length]} />
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
               <Tooltip />
@@ -107,6 +126,7 @@ const TotalVodAssets = () => {
                 activeIndex={activeIndex}
                 activeShape={renderActiveShape}
                 onMouseEnter={(_, index) => setActiveIndex(index)}
+                onClick={() => setActiveIndex(null)}
                 onMouseLeave={() => setActiveIndex(null)}
               >
                 {projectData.map((_, index) => (
@@ -122,77 +142,67 @@ const TotalVodAssets = () => {
       <Box sx={{ marginLeft: "20px", color: "#e0e0e0" }}>
         <Typography variant="h5" sx={{ marginBottom: "10px" }}>Projects Summary</Typography>
         <List>
-  {projectData.map((project, index) => {
-    const isActive = activeIndex === index;
+          {projectData.map((project, index) => {
+            const isActive = activeIndex === index;
 
-    return (
-      <ListItem
-        key={index}
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "12px 16px",
-          borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
-          transition: "color 0.3s ease-in-out",
-        }}
-      >
-        <Box sx={{ display: "flex", alignItems: "center", minWidth: "150px" }}>
-          <Box
-            sx={{
-              width: isActive ? "20px" : "14px",
-              height: isActive ? "20px" : "14px",
-              backgroundColor: isActive
-                ? COLORS[index % COLORS.length]
-                : COLORS[index % COLORS.length] + "99",
-              borderRadius: "4px",
-              marginRight: "12px",
-              transition: "all 0.3s ease-in-out",
-              filter: isActive ? "brightness(2)" : "brightness(1)",
-            }}
-          />
-          <Typography
-            variant="h6"
-            sx={{
-              color: "#fff",
-              fontWeight: isActive ? "bold" : "600",
-              transition: "font-weight 0.3s ease-in-out",
-            }}
-          >
-            {project.name}
-          </Typography>
-        </Box>
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0.7 }}
+                animate={{ opacity: isActive ? 1 : 0.7 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ListItem
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "12px 16px",
+                    borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+                    transition: "color 0.3s ease-in-out",
+                  }}
+                >
+                  <Box sx={{ display: "flex", alignItems: "center", minWidth: "150px" }}>
+                    <motion.div
+                      style={{
+                        width: "14px",
+                        height: "14px",
+                        backgroundColor: COLORS[index % COLORS.length] + "99",
+                        borderRadius: "4px",
+                        marginRight: "12px",
+                      }}
+                      animate={{
+                        width: isActive ? "20px" : "14px",
+                        height: isActive ? "20px" : "14px",
+                        filter: isActive ? "brightness(2)" : "brightness(1)",
+                      }}
+                      transition={{ duration: 0.3 }}
+                    />
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        color: "#fff",
+                        fontWeight: isActive ? "bold" : "600",
+                        transition: "font-weight 0.3s ease-in-out",
+                      }}
+                    >
+                      {project.name}
+                    </Typography>
+                  </Box>
 
-        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end", textAlign: "right" }}>
-          <Typography
-            variant="body2"
-            sx={{
-              color: isActive ? "#ffffff" : "#e0e0e0",
-              fontWeight: "500",
-              transition: "color 0.3s ease-in-out",
-            }}
-          >
-            Contents: {project.totalContents}
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{
-              color: isActive ? "#ffffff" : "#e0e0e0",
-              fontWeight: "500",
-              transition: "color 0.3s ease-in-out",
-            }}
-          >
-            Duration: {project.totalDuration}s
-          </Typography>
-        </Box>
-      </ListItem>
-    );
-  })}
-</List>
-
-
-
-
+                  <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end", textAlign: "right" }}>
+                    <Typography variant="body2" sx={{ color: "#e0e0e0", fontWeight: "500" }}>
+                      Contents: {project.totalContents}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: "#e0e0e0", fontWeight: "500" }}>
+                      Duration: {project.totalDuration}s
+                    </Typography>
+                  </Box>
+                </ListItem>
+              </motion.div>
+            );
+          })}
+        </List>
       </Box>
     </Box>
   );
